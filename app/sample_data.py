@@ -1,4 +1,9 @@
+import os
+import secrets
+from pathlib import Path
 from random import choice, randint
+
+from flask import current_app
 
 from .extensions import db
 from .models import ActivityLog, Alert, Device, Scan, User, Vulnerability
@@ -10,7 +15,17 @@ THREAT_LEVELS = ["low", "medium", "high", "critical"]
 def ensure_seed_data():
     if not User.query.filter_by(username="admin").first():
         admin = User(username="admin", role="administrator")
-        admin.set_password("admin123")
+        admin_password = os.environ.get("UPOSD_ADMIN_PASSWORD")
+        if not admin_password:
+            if os.environ.get("FLASK_ENV") == "production":
+                raise RuntimeError(
+                    "UPOSD_ADMIN_PASSWORD must be set when FLASK_ENV=production."
+                )
+            admin_password = secrets.token_urlsafe(16)
+            password_file = Path(current_app.instance_path) / "initial_admin_password.txt"
+            if not password_file.exists():
+                password_file.write_text(f"{admin_password}\n", encoding="utf-8")
+        admin.set_password(admin_password)
         db.session.add(admin)
 
     if Device.query.count() == 0:
@@ -59,9 +74,9 @@ def ensure_seed_data():
             open_ports = randint(2, 10)
             vulns = randint(0, 5)
             log = (
-                f"[NMAP] Host {target} is up.\\n"
-                f"[NMAP] {open_ports} open ports discovered.\\n"
-                f"[VULN] {vulns} potential vulnerabilities detected.\\n"
+                f"[NMAP] Host {target} is up.\n"
+                f"[NMAP] {open_ports} open ports discovered.\n"
+                f"[VULN] {vulns} potential vulnerabilities detected.\n"
                 "[DONE] Simulated scan complete."
             )
             db.session.add(

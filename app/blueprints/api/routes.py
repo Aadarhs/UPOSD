@@ -1,4 +1,5 @@
 from datetime import datetime
+import ipaddress
 from random import choice, randint
 
 from flask import Blueprint, jsonify, request
@@ -82,13 +83,21 @@ def start_scan():
     target = (data.get("target") or "192.168.10.0/24").strip()[:255]
     mode = (data.get("mode") or "safe-demo").strip()[:50]
 
+    try:
+        if "/" in target:
+            ipaddress.ip_network(target, strict=False)
+        else:
+            ipaddress.ip_address(target)
+    except ValueError:
+        return jsonify({"message": "Invalid scan target. Use a valid IP or CIDR notation."}), 400
+
     open_ports = randint(1, 15)
     vulnerabilities = randint(0, 6)
     output = (
-        f"[SCAN] Mode={mode} Target={target}\\n"
-        "[SCAN] Discovering live hosts...\\n"
-        f"[SCAN] Open ports identified: {open_ports}\\n"
-        f"[SCAN] Potential vulnerabilities: {vulnerabilities}\\n"
+        f"[SCAN] Mode={mode} Target={target}\n"
+        "[SCAN] Discovering live hosts...\n"
+        f"[SCAN] Open ports identified: {open_ports}\n"
+        f"[SCAN] Potential vulnerabilities: {vulnerabilities}\n"
         "[DONE] Safe simulation complete."
     )
 
@@ -188,8 +197,7 @@ def activity_feed():
 @api_bp.get("/threat/series")
 @login_required
 def threat_series():
-    labels = [f"T-{i}" for i in range(11, -1, -1)]
-    labels.reverse()
+    labels = [f"T-{i}" for i in range(12)]
     data = [randint(15, 95) for _ in range(12)]
     return jsonify({"labels": labels, "data": data})
 

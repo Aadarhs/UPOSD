@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+instance/*.db
+instance/.secret_key
+instance/initial_admin_password.txt
+.venv/

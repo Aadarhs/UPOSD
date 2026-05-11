@@ -1,6 +1,6 @@
 const apiGet = async (path) => {
   const response = await fetch(path);
-  if (!response.ok) throw new Error(`Failed request: ${path}`);
+  if (!response.ok) throw new Error(`Failed request (${response.status} ${response.statusText}): ${path}`);
   return response.json();
 };
 
@@ -144,11 +144,19 @@ const loadPacketTable = async () => {
 
 const bootstrap = async () => {
   try {
-    await Promise.all([updateDashboard(), loadDevices(), loadVulnerabilities(), loadAlerts(), loadPacketTable()]);
+    const pageLoaders = [];
+    if (document.getElementById("kpi-devices")) pageLoaders.push(updateDashboard());
+    if (document.getElementById("deviceTableBody")) pageLoaders.push(loadDevices());
+    if (document.getElementById("vulnTableBody")) pageLoaders.push(loadVulnerabilities());
+    if (document.getElementById("alertsList") || document.getElementById("threatDonut")) pageLoaders.push(loadAlerts());
+    if (document.getElementById("packetTableBody") || document.getElementById("topologyOutput")) pageLoaders.push(loadPacketTable());
+    await Promise.all(pageLoaders);
     bindScanForm();
+    const hasDashboard = Boolean(document.getElementById("kpi-devices"));
+    const hasNetwork = Boolean(document.getElementById("packetTableBody") || document.getElementById("topologyOutput"));
     setInterval(() => {
-      updateDashboard().catch(() => {});
-      loadPacketTable().catch(() => {});
+      if (hasDashboard) updateDashboard().catch(() => {});
+      if (hasNetwork) loadPacketTable().catch(() => {});
     }, 8000);
   } catch (error) {
     console.error(error);

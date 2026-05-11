@@ -5,7 +5,7 @@ UPOSD is a full-stack academic cybersecurity platform that simulates a portable 
 ## Features
 
 - Flask + SQLite modular backend
-- Flask-Login authentication (`admin` / `admin123` demo credentials)
+- Flask-Login authentication (seeded admin account on first run)
 - REST API architecture for dashboards and scan workflows
 - Safe-mode network scan simulation (Nmap-inspired)
 - Vulnerability tracking and reporting
@@ -64,6 +64,14 @@ python run.py
 ```
 
 5. Open `http://127.0.0.1:5000`.
+   - On first startup, the generated admin password is saved to `instance/initial_admin_password.txt`.
+6. Optional environment hardening before deployment:
+
+```bash
+export SECRET_KEY='replace-with-strong-secret'
+export UPOSD_ADMIN_PASSWORD='replace-admin-password'
+export FLASK_ENV='production'
+```
 
 ## REST API Highlights
 
@@ -97,3 +105,4 @@ gunicorn -w 2 -b 0.0.0.0:5000 run:app
 - This project intentionally uses **safe/demo attack simulation mode only**.
 - No real exploitation payloads are included.
 - Designed for university final-year presentation and demonstration.
+- Default development credentials are for local demo only and must be changed before any real deployment.
