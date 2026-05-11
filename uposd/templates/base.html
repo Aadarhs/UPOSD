@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UPOSD</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar glass">
+      <h1>UPOSD</h1>
+      <nav>
+        <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('main.devices_page') }}">Device Discovery</a>
+        <a href="{{ url_for('main.vulnerabilities_page') }}">Vulnerability Reports</a>
+        <a href="{{ url_for('main.threat_analytics_page') }}">Threat Analytics</a>
+        <a href="{{ url_for('main.network_monitoring_page') }}">Network Monitoring</a>
+        <a href="{{ url_for('main.settings_page') }}">Settings</a>
+        <a href="{{ url_for('main.about_page') }}">About</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+      </nav>
+    </aside>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

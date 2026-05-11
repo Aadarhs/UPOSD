@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Enterprise Cybersecurity Dashboard</h2>
+<div class="cards">
+  <div class="card glass"><h3>Devices</h3><p id="kpi-devices">-</p></div>
+  <div class="card glass"><h3>Vulnerabilities</h3><p id="kpi-vulns">-</p></div>
+  <div class="card glass"><h3>Scans</h3><p id="kpi-scans">-</p></div>
+  <div class="card glass"><h3>Threat Level</h3><p id="kpi-threat">-</p></div>
+</div>
+<div class="card glass">
+  <h3>Threat Analytics</h3>
+  <canvas id="threatChart" height="120"></canvas>
+</div>
+<div class="card glass">
+  <h3>Live Terminal Feed</h3>
+  <pre id="feed">Initializing secure telemetry...</pre>
+</div>
+{% endblock %}
