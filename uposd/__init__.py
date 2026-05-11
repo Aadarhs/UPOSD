@@ -39,12 +39,17 @@ def create_app(test_config=None):
         db.create_all()
         seed_demo_data()
         username = app.config["INITIAL_ADMIN_USERNAME"]
-        password = app.config["INITIAL_ADMIN_PASSWORD"] or secrets.token_urlsafe(12)
+        configured_password = app.config["INITIAL_ADMIN_PASSWORD"]
+        password = configured_password or secrets.token_urlsafe(12)
         if not User.query.filter_by(username=username).first():
             User.create_default_admin(username, password)
-            app.logger.warning(
-                "Created initial admin user '%s'. Set UPOSD_ADMIN_PASSWORD for deterministic credentials.",
-                username,
-            )
+            if configured_password:
+                app.logger.warning("Created initial admin user '%s'.", username)
+            else:
+                app.logger.warning(
+                    "Created initial admin user '%s' with generated password: %s",
+                    username,
+                    password,
+                )
 
     return app

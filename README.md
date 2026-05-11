@@ -85,7 +85,7 @@ Default login is created from `UPOSD_ADMIN_USER` and `UPOSD_ADMIN_PASSWORD` on f
 ## Testing
 
 ```bash
-python -m unittest -q
+python -m unittest discover -s tests -q
 ```
 
 ## Raspberry Pi Deployment Notes
