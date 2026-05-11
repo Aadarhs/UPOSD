@@ -3,9 +3,19 @@ const THREAT_LEVEL_SCORE = {low:1,medium:2,high:3};
 const MAX_FEED_LINES = 80;
 const FEED_UPDATE_INTERVAL_MS = 2200;
 
+function isValidIpOrCidr(value){
+  const [ipPart, cidrPart] = value.split('/');
+  const octets = ipPart.split('.');
+  if(octets.length !== 4) return false;
+  const octetsValid = octets.every((o) => /^\d+$/.test(o) && Number(o) >= 0 && Number(o) <= 255);
+  if(!octetsValid) return false;
+  if(cidrPart === undefined) return true;
+  return /^\d+$/.test(cidrPart) && Number(cidrPart) >= 0 && Number(cidrPart) <= 32;
+}
+
 async function getJson(url, opts){
   const r=await fetch(url,opts);
-  if(!r.ok){console.error(`Request failed: ${url} (${r.status})`);return null;}
+  if(!r.ok){console.error(`API request to ${url} failed with status ${r.status}: ${r.statusText}`);return null;}
   return r.json();
 }
 
@@ -57,6 +67,8 @@ function wireScan(){
   if(!btn||!out) return;
   btn.onclick=async ()=>{
     const scanTarget=(target?.value||'192.168.1.0/24').trim();
+    const validTarget=isValidIpOrCidr(scanTarget);
+    if(!validTarget){out.textContent='Invalid target format. Use IP or CIDR (e.g., 192.168.1.1 or 192.168.1.0/24).';return;}
     const result=await getJson('/api/scans/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target:scanTarget})});
     if(result){out.textContent=JSON.stringify(result,null,2);}
   };

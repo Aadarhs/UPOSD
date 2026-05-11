@@ -17,7 +17,7 @@ def create_app(test_config=None):
         SQLALCHEMY_DATABASE_URI="sqlite:///uposd.db",
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         INITIAL_ADMIN_USERNAME=os.getenv("UPOSD_ADMIN_USER", "admin"),
-        INITIAL_ADMIN_PASSWORD=os.getenv("UPOSD_ADMIN_PASSWORD"),
+        INITIAL_ADMIN_PASSWORD=os.getenv("UPOSD_ADMIN_PASSWORD", "admin123"),
     )
 
     if test_config:
@@ -39,17 +39,12 @@ def create_app(test_config=None):
         db.create_all()
         seed_demo_data()
         username = app.config["INITIAL_ADMIN_USERNAME"]
-        configured_password = app.config["INITIAL_ADMIN_PASSWORD"]
-        password = configured_password or secrets.token_urlsafe(12)
+        password = app.config["INITIAL_ADMIN_PASSWORD"]
         if not User.query.filter_by(username=username).first():
             User.create_default_admin(username, password)
-            if configured_password:
-                app.logger.warning("Created initial admin user '%s'.", username)
-            else:
-                app.logger.warning(
-                    "Created initial admin user '%s' with generated password: %s",
-                    username,
-                    password,
-                )
+            app.logger.info(
+                "Created initial admin user '%s'. Set UPOSD_ADMIN_PASSWORD to override the default.",
+                username,
+            )
 
     return app

@@ -16,8 +16,8 @@
       {% endfor %}
     {% endwith %}
     <form method="post">
-      <input type="text" name="username" placeholder="Username" required>
-      <input type="password" name="password" placeholder="Password" required>
+      <input type="text" name="username" placeholder="Username" aria-label="Username" required>
+      <input type="password" name="password" placeholder="Password" aria-label="Password" required>
       <button type="submit">Sign In</button>
     </form>
     <small>Use credentials configured during deployment.</small>

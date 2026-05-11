@@ -1,4 +1,4 @@
-# UPOSD
+# UPOSD (Universal Portable Offensive Security Device)
 
 UPOSD (Universal Portable Offensive Security Device) is a full-stack Flask-based enterprise cybersecurity dashboard built for academic demonstration. It simulates offensive security workflows in **safe demo mode** and provides real-time monitoring UX with a modern dark cyber theme.
 
@@ -58,6 +58,7 @@ python app.py
 Open `http://127.0.0.1:5000`.
 
 Default login is created from `UPOSD_ADMIN_USER` and `UPOSD_ADMIN_PASSWORD` on first run.
+If `UPOSD_ADMIN_PASSWORD` is not set, the default password is `admin123` (change this in production).
 
 ## Core Pages
 
