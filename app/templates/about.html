@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<header class="page-head"><h1>About UPOSD</h1></header>
+<section class="panel glass">
+    <p>
+        UPOSD (Universal Portable Offensive Security Device) is an academic enterprise cybersecurity
+        monitoring and safe offensive security simulation platform tailored for final-year demonstration.
+    </p>
+    <ul>
+        <li>Cybersecurity dashboard with threat analytics</li>
+        <li>Network and IoT monitoring with simulated telemetry</li>
+        <li>Nmap-inspired scanning workflows in safe/demo mode</li>
+        <li>Vulnerability reporting and administrative control plane</li>
+        <li>Raspberry Pi friendly Python Flask architecture</li>
+    </ul>
+    <p><a href="{{ url_for('auth.login') }}">Login to access the control center.</a></p>
+</section>
+{% endblock %}

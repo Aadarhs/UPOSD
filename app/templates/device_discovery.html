@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<header class="page-head"><h1>Device Discovery</h1><p>Monitored network and IoT assets.</p></header>
+<section class="panel glass">
+    <table>
+        <thead>
+            <tr><th>Host</th><th>IP</th><th>MAC</th><th>Type</th><th>Status</th><th>Threat</th><th>Last Seen</th></tr>
+        </thead>
+        <tbody id="deviceTableBody"></tbody>
+    </table>
+</section>
+{% endblock %}
