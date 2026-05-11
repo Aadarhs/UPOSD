@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPOSD Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-body">
+    <div class="login-card glass">
+        <h1>UPOSD Access</h1>
+        <p>Use default admin credentials: <strong>admin/admin123</strong></p>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <form method="post">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" required>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required>
+            <button type="submit">Authenticate</button>
+        </form>
+        <a class="about-link" href="{{ url_for('main.about') }}">About Project</a>
+    </div>
+</body>
+</html>

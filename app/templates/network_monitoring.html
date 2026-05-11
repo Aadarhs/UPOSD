@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<header class="page-head"><h1>Network Monitoring</h1><p>Packet stream simulation and topology view.</p></header>
+<section class="two-col">
+    <div class="panel glass">
+        <h3>Packet Activity (Simulated)</h3>
+        <table>
+            <thead><tr><th>Time</th><th>Source</th><th>Destination</th><th>Proto</th><th>Bytes</th><th>Anomaly</th></tr></thead>
+            <tbody id="packetTableBody"></tbody>
+        </table>
+    </div>
+    <div class="panel glass">
+        <h3>Network Topology</h3>
+        <pre id="topologyOutput">Loading topology...</pre>
+    </div>
+</section>
+{% endblock %}

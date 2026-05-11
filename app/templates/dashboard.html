@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<header class="page-head">
+    <h1>Cybersecurity Command Dashboard</h1>
+    <p>Real-time enterprise threat posture and safe offensive simulation control.</p>
+</header>
+<section class="kpi-grid">
+    <article class="kpi-card glass"><h3>Total Devices</h3><p id="kpi-devices">--</p></article>
+    <article class="kpi-card glass"><h3>Online</h3><p id="kpi-online">--</p></article>
+    <article class="kpi-card glass"><h3>Open Vulnerabilities</h3><p id="kpi-vulns">--</p></article>
+    <article class="kpi-card glass"><h3>Threat Score</h3><p id="kpi-threat">--</p></article>
+</section>
+<section class="two-col">
+    <div class="panel glass">
+        <h3>Threat Trend Analytics</h3>
+        <canvas id="threatChart" height="120"></canvas>
+    </div>
+    <div class="panel glass">
+        <h3>Safe Scan Control</h3>
+        <form id="scanForm">
+            <input type="text" id="scanTarget" placeholder="Target subnet (e.g., 192.168.10.0/24)">
+            <select id="scanMode">
+                <option value="safe-demo">Safe Demo Attack Simulation</option>
+                <option value="nmap-basic">Nmap Basic Discovery</option>
+                <option value="iot-surface">IoT Surface Audit</option>
+            </select>
+            <button type="submit">Run Simulation</button>
+        </form>
+        <pre id="scanOutput">Awaiting scan...</pre>
+    </div>
+</section>
+<section class="panel glass">
+    <h3>Live Terminal Activity Feed</h3>
+    <div id="activityFeed" class="terminal-feed"></div>
+</section>
+{% endblock %}
