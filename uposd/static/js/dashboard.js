@@ -1,4 +1,13 @@
-async function getJson(url, opts){const r=await fetch(url,opts);if(!r.ok) return null;return r.json();}
+const HISTORY_POINTS_LIMIT = 8;
+const THREAT_LEVEL_SCORE = {low:1,medium:2,high:3};
+const MAX_FEED_LINES = 80;
+const FEED_UPDATE_INTERVAL_MS = 2200;
+
+async function getJson(url, opts){
+  const r=await fetch(url,opts);
+  if(!r.ok){console.error(`Request failed: ${url} (${r.status})`);return null;}
+  return r.json();
+}
 
 async function loadDashboard(){
   const summary=await getJson('/api/dashboard/summary');
@@ -10,8 +19,8 @@ async function loadDashboard(){
   if(byId('kpi-threat')) byId('kpi-threat').textContent=summary.threat_level.toUpperCase();
 
   const history=await getJson('/api/scans/history')||[];
-  const labels=history.slice(0,8).map((_,i)=>`Scan ${i+1}`);
-  const points=history.slice(0,8).map(l=>({low:1,medium:2,high:3}[l.threat_level]||1));
+  const labels=history.slice(0,HISTORY_POINTS_LIMIT).map((_,i)=>`Scan ${i+1}`);
+  const points=history.slice(0,HISTORY_POINTS_LIMIT).map(l=>THREAT_LEVEL_SCORE[l.threat_level]||1);
 
   ['threatChart','threatChartFull'].forEach((id)=>{
     const c=document.getElementById(id);
@@ -22,7 +31,7 @@ async function loadDashboard(){
   const feed=document.getElementById('feed');
   if(feed){
     const lines=['[OK] Sensor link established','[INFO] Monitoring packet stream','[WARN] Suspicious behavior score at 67/100'];
-    let i=0;setInterval(()=>{feed.textContent=`${feed.textContent}\n${lines[i%lines.length]}`;i++;},2200);
+    let i=0;setInterval(()=>{const next=`${feed.textContent}\n${lines[i%lines.length]}`.split('\n').slice(-MAX_FEED_LINES).join('\n');feed.textContent=next;i++;},FEED_UPDATE_INTERVAL_MS);
   }
 }
 
@@ -44,9 +53,11 @@ async function loadVulns(){
 function wireScan(){
   const btn=document.getElementById('run-scan');
   const out=document.getElementById('scan-output');
+  const target=document.getElementById('scan-target');
   if(!btn||!out) return;
   btn.onclick=async ()=>{
-    const result=await getJson('/api/scans/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target:'192.168.1.0/24'})});
+    const scanTarget=(target?.value||'192.168.1.0/24').trim();
+    const result=await getJson('/api/scans/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target:scanTarget})});
     if(result){out.textContent=JSON.stringify(result,null,2);}
   };
 }

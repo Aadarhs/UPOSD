@@ -49,14 +49,15 @@ UPOSD/
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+export UPOSD_ADMIN_USER=admin
+export UPOSD_ADMIN_PASSWORD='change-me-strong'
+export SECRET_KEY='change-me-random-secret'
 python app.py
 ```
 
 Open `http://127.0.0.1:5000`.
 
-Default login:
-- Username: `admin`
-- Password: `admin123`
+Default login is created from `UPOSD_ADMIN_USER` and `UPOSD_ADMIN_PASSWORD` on first run.
 
 ## Core Pages
 
@@ -101,6 +102,7 @@ python -m unittest -q
    gunicorn -w 2 -b 0.0.0.0:5000 app:app
    ```
 5. (Optional) Add reverse proxy with Nginx and systemd service for auto-start.
+6. Limit network exposure in production (firewall/VPN/reverse proxy), since binding to `0.0.0.0` makes the service reachable on all interfaces.
 
 ## Security and Ethics
 

@@ -11,6 +11,8 @@ class UPOSDAppTests(unittest.TestCase):
                 "WTF_CSRF_ENABLED": False,
                 "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
                 "SECRET_KEY": "test-secret",
+                "INITIAL_ADMIN_USERNAME": "admin",
+                "INITIAL_ADMIN_PASSWORD": "admin123",
             }
         )
         self.client = self.app.test_client()

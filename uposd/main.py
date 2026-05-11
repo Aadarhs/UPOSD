@@ -1,16 +1,14 @@
+import io
+
 from flask import Blueprint, jsonify, render_template, request, send_file
 from flask_login import login_required
 
 from .models import Device, ScanLog, Vulnerability
-from .scan_service import run_demo_scan, run_nmap_discovery, seed_demo_data
+from .scan_service import run_demo_scan, run_nmap_discovery
 
 
 main_bp = Blueprint("main", __name__)
-
-
-@main_bp.before_app_request
-def bootstrap_data():
-    seed_demo_data()
+MAX_SCAN_HISTORY = 50
 
 
 @main_bp.route("/dashboard")
@@ -98,7 +96,7 @@ def start_scan():
 @main_bp.route("/api/scans/history")
 @login_required
 def scan_history():
-    logs = ScanLog.query.order_by(ScanLog.created_at.desc()).limit(50).all()
+    logs = ScanLog.query.order_by(ScanLog.created_at.desc()).limit(MAX_SCAN_HISTORY).all()
     return jsonify(
         [
             {
@@ -167,8 +165,6 @@ def attack_simulation():
 @main_bp.route("/api/reports/download")
 @login_required
 def download_report():
-    import io
-
     content = "target,status,threat_level\n" + "\n".join(
         f"{log.target},{log.status},{log.threat_level}" for log in ScanLog.query.all()
     )

@@ -18,9 +18,9 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     @staticmethod
-    def create_default_admin():
-        admin = User(username="admin")
-        admin.set_password("admin123")
+    def create_default_admin(username, password):
+        admin = User(username=username)
+        admin.set_password(password)
         db.session.add(admin)
         db.session.commit()
 

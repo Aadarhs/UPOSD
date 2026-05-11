@@ -1,3 +1,4 @@
+import ipaddress
 import random
 import subprocess
 from datetime import datetime
@@ -71,6 +72,13 @@ def run_demo_scan(target):
 
 def run_nmap_discovery(target):
     try:
+        try:
+            if "/" in target:
+                ipaddress.ip_network(target, strict=False)
+            else:
+                ipaddress.ip_address(target)
+        except ValueError:
+            return {"mode": "safe-demo", "output": "Invalid target format. Use IP or CIDR."}
         output = subprocess.check_output(["nmap", "-sn", target], text=True, timeout=30)
         return {"mode": "nmap", "output": output}
     except Exception:
